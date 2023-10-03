@@ -1,8 +1,8 @@
 import { Component } from "react";
+import { StyledDiv } from "./ContactForm/StyledForm";
 import { ContactForm } from "./ContactForm/ContactForm";
 import { ContactList } from "./ContactList/ContactList";
 import { Filter } from "./ContactFilter/ContactFilter";
-import { StyledDiv } from "./ContactForm/StyledForm";
 
 export class App extends Component {   
     state = {
@@ -13,6 +13,21 @@ export class App extends Component {
             {id: 'id-4', name: 'Annie Copeland', number: '227-91-26'},
         ],
         filters: '',
+    };
+    
+    componentDidMount() {
+        const contacts = localStorage.getItem('contacts');
+        const parsContacts = JSON.parse(contacts);
+
+        if (parsContacts) {
+            this.setState({contacts: parsContacts})
+        }
+    };
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this.state.contacts !== prevState.contacts){
+            localStorage.setItem('contacts', JSON.stringify(this.state.contacts))
+        }
     };
 
     addContact = newContact => {
@@ -42,21 +57,6 @@ export class App extends Component {
                 contacts: prevState.contacts.filter(contact => contact.id !== userId),
             };
         });
-    };
-
-    componentDidMount() {
-        const contacts = localStorage.getItem('contacts');
-        const parsContacts = JSON.parse(contacts);
-
-        if (parsContacts) {
-            this.setState({contacts: parsContacts})
-        }
-    };
-
-    componentDidUpdate(prevProps, prevState) {
-        if (this.state.contacts !== prevState.contacts){
-            localStorage.setItem('contacts', JSON.stringify(this.state.contacts))
-        }
     };
 
     render() {
